@@ -17,8 +17,8 @@ const Modal = (props) => {
           <p>{"Has " + props.emp.remainingSickDays + " Remaining Sick Days"}</p>
         </div>
         <div className="footer">
-          <button onClick={props.closeModal}>Cancel Actions</button>
-          <button onClick={props.modalSaveChanges}>Save Changes</button>
+          <button onClick={props.closeModal}>Edit employee's info</button>
+          <button onClick={() => props.handleDelete(props.emp.id)}>Delete employee from database</button>
         </div>
       </div>
     </div>
