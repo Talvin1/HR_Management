@@ -1,4 +1,4 @@
-import express from "express";
+import express, { query } from "express";
 import mysql from "mysql";
 import cors from "cors";
 
@@ -42,4 +42,21 @@ app.post("/addEmp", (req, res) => {
 
 app.listen(4000, () => {
   console.log("Connected to backend!");
+});
+
+app.delete("/employees/:id", (res, req) => {
+  console.log("1");
+  const bookId = parseInt(req.params.id);
+  console.log("2");
+  const query = "DELETE FROM employees WHERE id = ?";
+  console.log("3");
+  db.query(query, [bookId], (error, data) => {
+    console.log("4");
+    if (error) {
+      console.log("5");
+      return res.json(error);
+    }
+    console.log("6");
+    return res.json("Employee deleted!");
+  });
 });
