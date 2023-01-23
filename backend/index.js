@@ -41,5 +41,5 @@ app.post("/addEmp", (req, res) => {
 });
 
 app.listen(4000, () => {
-  console.log("Connected to backend");
+  console.log("Connected to backend!");
 });
