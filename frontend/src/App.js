@@ -3,6 +3,7 @@ import Login from "./Pages/Login";
 import EmployeesPage from "./Pages/EmployeesPage";
 import Modal from "./components/Modal";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import AddPage from "./Pages/AddPage";
 
 const App = () => {
   return (
@@ -11,6 +12,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Login />}></Route>
           <Route path="/employees" element={<EmployeesPage />}></Route>
+          <Route path="/AddPage" element={<AddPage />}></Route>
         </Routes>
       </BrowserRouter>
     </div>

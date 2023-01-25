@@ -15,7 +15,6 @@ const Login = () => {
     const inputPassword = inputValues.password;
     admins.forEach((admin) => {
       if (admin.username === inputUsername && admin.password === inputPassword) {
-        // return navigate("/main");
         console.log("success");
       } else {
         console.log("Wrong Input");
