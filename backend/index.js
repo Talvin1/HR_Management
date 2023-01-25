@@ -28,15 +28,24 @@ app.get("/employees", (req, res) => {
   });
 });
 
-app.post("/addEmp", (req, res) => {
+app.post("/employees", (req, res) => {
   const query =
-    "INSERT INTO employees ('id', 'fullname', 'birthdate', 'employementDate', 'remainingVacDays', 'remainingSickDays', 'vacDates') VALUES (?)";
-  const values = [];
-  db.query(query, (error, data) => {
+    "INSERT INTO employees (id,fullname,birthdate,employmentDate,remainingVacDays,address,phoneNumber,empPic) VALUES (?)";
+  const values = [
+    req.body.id,
+    req.body.fullname,
+    req.body.birthdate,
+    req.body.employmentDate,
+    req.body.remainingVacDays,
+    req.body.address,
+    req.body.phoneNumber,
+    req.body.empPic,
+  ];
+  db.query(query, [values], (error, data) => {
     if (error) {
-      res.json(error);
+      return res.json(error);
     }
-    res.json(data);
+    return res.json("Employee has been added");
   });
 });
 
@@ -44,19 +53,13 @@ app.listen(4000, () => {
   console.log("Connected to backend!");
 });
 
-app.delete("/employees/:id", (res, req) => {
-  console.log("1");
-  const bookId = parseInt(req.params.id);
-  console.log("2");
+app.delete("/employees/:id", (req, res) => {
+  const employeeId = req.params.id;
   const query = "DELETE FROM employees WHERE id = ?";
-  console.log("3");
-  db.query(query, [bookId], (error, data) => {
-    console.log("4");
+  db.query(query, [employeeId], (error, data) => {
     if (error) {
-      console.log("5");
       return res.json(error);
     }
-    console.log("6");
     return res.json("Employee deleted!");
   });
 });
