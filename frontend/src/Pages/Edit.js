@@ -1,51 +1,32 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
-const AddPage = () => {
-  const [newEmployee, setNewEmployee] = useState({
-    id: 0,
-    fullname: "",
-    birthdate: "",
-    employmentDate: "",
-    remainingVacDays: 20,
-    address: "",
-    phoneNumber: 0,
-    empPic: "",
-  });
-
-  const date = new Date();
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
-  const year = date.getFullYear();
-  const currentDate = `${day}-${month}-${year}`;
+const Edit = () => {
+  const [employee, setEmployee] = useState({});
+  const currentDate = new Date();
+  currentDate.getDate();
+  const IdFromUrl = useLocation().pathname.split("/");
 
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setNewEmployee((prevEmployee) => ({ ...prevEmployee, [e.target.name]: e.target.value }));
-  };
-
-  const handleChangeDate = (e) => {
-    setNewEmployee((prevEmployee) => ({ ...prevEmployee, [e.target.name]: e.target.value }));
+    setEmployee((prevEmployee) => ({ ...prevEmployee, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:4000/employees", newEmployee);
+      await axios.put("http://localhost:4000/employees/" + IdFromUrl[2], employee);
       navigate("/employees");
     } catch (error) {
       console.log(error);
     }
   };
-
   return (
     <div>
-      <h1>Add A New Employee</h1>
+      <h1>Choose a field to edit</h1>
       <form>
-        <p>Enter employee's ID</p>
-        <input type="number" name="id" placeholder="ID" onChange={handleChange} min="00000001" max="999999999" />
         <p>Enter employee's full name</p>
         <input type="text" name="fullname" placeholder="Fullname" onChange={handleChange} />
         <p>Enter employee's birthdate</p>
@@ -53,7 +34,7 @@ const AddPage = () => {
           type="date"
           name="birthdate"
           placeholder="Birthdate"
-          onChange={handleChangeDate}
+          onChange={handleChange}
           min="01-01-1960"
           max={currentDate}
         />
@@ -62,7 +43,7 @@ const AddPage = () => {
           type="date"
           name="employmentDate"
           placeholder="Employment date"
-          onChange={handleChangeDate}
+          onChange={handleChange}
           min="01-01-2015"
           max={currentDate}
         />
@@ -79,10 +60,10 @@ const AddPage = () => {
         />
         <p>Enter employee's picture</p>
         <input type="text" name="empPic" placeholder="Picture" onChange={handleChange} />
-        <button onClick={handleSubmit}>Add Employee</button>
+        <button onClick={handleSubmit}>Save Changes To Employee</button>
       </form>
     </div>
   );
 };
 
-export default AddPage;
+export default Edit;

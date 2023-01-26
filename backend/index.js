@@ -11,10 +11,6 @@ const db = mysql.createConnection({
   database: "hr_manager_data",
 });
 
-app.get("/", (req, res) => {
-  res.json("siiiii!!!!!");
-});
-
 app.use(express.json());
 app.use(cors());
 
@@ -61,5 +57,36 @@ app.delete("/employees/:id", (req, res) => {
       return res.json(error);
     }
     return res.json("Employee deleted!");
+  });
+});
+
+app.put("/employees/:id", (req, res) => {
+  const employeeId = req.params.id;
+  const query =
+    "UPDATE employees SET fullname = ?, birthdate = ?, employmentDate = ?, remainingVacDays = ?, address = ?, phoneNumber = ?, empPic = ? WHERE id = ?";
+  const values = [
+    req.body.fullname,
+    req.body.birthdate,
+    req.body.employmentDate,
+    req.body.remainingVacDays,
+    req.body.address,
+    req.body.phoneNumber,
+    req.body.empPic,
+  ];
+  db.query(query, [...values, employeeId], (error, data) => {
+    if (error) {
+      return res.json(error);
+    }
+    return res.json("Employee updated Successfully!");
+  });
+});
+
+app.get("/", (req, res) => {
+  const query = "SELECT * FROM admins";
+  db.query(query, (error, data) => {
+    if (error) {
+      res.json(error);
+    }
+    res.json(data);
   });
 });

@@ -1,24 +1,38 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
+// import { useNavigate, Navigate } from "react-router-dom";
 
 const Login = () => {
   // const navigate = useNavigate();
+  const [admins, setAdmins] = useState([]);
+
+  useEffect(() => {
+    const fetchAllAdmins = async () => {
+      try {
+        const res = await axios.get("http://localhost:4000/");
+        setAdmins(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchAllAdmins();
+  }, []);
+
   const [inputValues, setInputValues] = useState({
     username: "",
     password: "",
   });
 
-  const [admins, setAdmins] = useState([{ username: "tal", password: "vin" }]);
-
   const checkCredentials = (e) => {
     e.preventDefault();
     const inputUsername = inputValues.username;
     const inputPassword = inputValues.password;
-    admins.forEach((admin) => {
+    admins.map((admin) => {
       if (admin.username === inputUsername && admin.password === inputPassword) {
-        console.log("success");
-      } else {
-        console.log("Wrong Input");
+        console.log("successfull if");
+        return true;
       }
+      return false;
     });
   };
 
@@ -27,7 +41,6 @@ const Login = () => {
       return { ...inputValues, [e.target.name]: e.target.value };
     });
   };
-  console.log(inputValues);
   return (
     <div>
       <h1>'Alpha Robotics' Human Resources System</h1>

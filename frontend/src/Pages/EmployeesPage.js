@@ -13,7 +13,6 @@ const EmployeesPage = () => {
       try {
         const res = await axios.get("http://localhost:4000/employees");
         setEmployeeList(res.data);
-        console.log("Fetched Data!");
       } catch (error) {
         console.log(error);
       }
@@ -22,7 +21,6 @@ const EmployeesPage = () => {
   }, []);
 
   const openModal = (e) => {
-    console.log(e.target);
     setCurrentEmp(employeeList[e.target.id - 1]);
     setModalIsOpen(true);
   };
