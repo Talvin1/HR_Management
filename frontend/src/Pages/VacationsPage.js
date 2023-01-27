@@ -4,11 +4,11 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import './EmployeesPage.css'
 
-const EmployeesPage = (props) => {
+const VacationsPage = (props) => {
   const [currentEmp, setCurrentEmp] = useState({});
   const [employeeList, setEmployeeList] = useState([]);
+  const [vacList, setVacList] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
-
   useEffect(() => {
     const fetchAllEmployees = async () => {
       try {
@@ -18,7 +18,16 @@ const EmployeesPage = (props) => {
         console.log(error);
       }
     };
+    const fetchAllVacs = async () => {
+        try {
+          const res = await axios.get("http://localhost:4000/vacations");
+          setVacList(res.data);
+        } catch (error) {
+          console.log(error);
+        }
+      };
     fetchAllEmployees();
+    fetchAllVacs();
   }, []);
 
   const openModal = (e) => {
@@ -52,7 +61,7 @@ const EmployeesPage = (props) => {
           </div>
         );
       })}
-      {modalIsOpen && <Modal closeModal={closeModal} emp={currentEmp} handleDelete={handleDelete} />}
+      {modalIsOpen && <Modal closeModal={closeModal} emp={currentEmp}/>}
       <button>
         <Link to="/addPage"> Add new employee</Link>
       </button>
@@ -60,4 +69,13 @@ const EmployeesPage = (props) => {
   );
 };
 
-export default EmployeesPage;
+export default VacationsPage;
+
+{/* 
+// <p>Add dates of vacation:</p>
+//         <p>Start</p>
+//         <input type="date"/>
+//         <p>End</p>
+//         <input type="date"/>
+//         <p>Tick the box if the vacation is a *sick leave*</p>
+//         <input type="checkbox"/> */}

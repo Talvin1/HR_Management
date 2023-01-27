@@ -28,7 +28,7 @@ const Edit = () => {
       <h1>Choose a field to edit</h1>
       <form>
         <p>Enter employee's full name</p>
-        <input type="text" name="fullname" placeholder="Fullname" onChange={handleChange} />
+        <input type="text" maxLength="45" name="fullname" placeholder="Fullname" onChange={handleChange} />
         <p>Enter employee's birthdate</p>
         <input
           type="date"
@@ -53,6 +53,7 @@ const Edit = () => {
         <input
           type="text"
           name="phoneNumber"
+          maxLength="10"
           placeholder="Phone Number"
           onChange={handleChange}
           min="0500000000"

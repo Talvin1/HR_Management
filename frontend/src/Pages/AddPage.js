@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
 
-const AddPage = () => {
+const AddPage = (props) => {
   const [newEmployee, setNewEmployee] = useState({
     id: 0,
     fullname: "",
@@ -23,7 +23,12 @@ const AddPage = () => {
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setNewEmployee((prevEmployee) => ({ ...prevEmployee, [e.target.name]: e.target.value }));
+    if(e.target.name === 'id' && e.target.value.length > 8) {
+
+    } else {
+      console.log(e.target.value)
+      setNewEmployee((prevEmployee) => ({ ...prevEmployee, [e.target.name]: e.target.value }));
+    }
   };
 
   const handleChangeDate = (e) => {
@@ -41,13 +46,14 @@ const AddPage = () => {
   };
 
   return (
+    props.loggedIn &&
     <div>
       <h1>Add A New Employee</h1>
       <form>
         <p>Enter employee's ID</p>
-        <input type="number" name="id" placeholder="ID" onChange={handleChange} min="00000001" max="999999999" />
+        <input type="text" name="id" placeholder="ID" maxLength="9" onChange={handleChange} min="00000001" max="999999999" />
         <p>Enter employee's full name</p>
-        <input type="text" name="fullname" placeholder="Fullname" onChange={handleChange} />
+        <input type="text" maxLength="45" name="fullname" placeholder="Fullname" onChange={handleChange} />
         <p>Enter employee's birthdate</p>
         <input
           type="date"
@@ -72,6 +78,7 @@ const AddPage = () => {
         <input
           type="text"
           name="phoneNumber"
+          maxLength="10"
           placeholder="Phone Number"
           onChange={handleChange}
           min="0500000000"

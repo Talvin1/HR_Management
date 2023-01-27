@@ -3,22 +3,21 @@ import EmployeesPage from "./Pages/EmployeesPage";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AddPage from "./Pages/AddPage";
 import Edit from "./Pages/Edit";
-import UserContext from "./components/UserContext";
-import { useMemo, useState } from "react";
+import {useState} from 'react'
+import VacationsPage from "./Pages/VacationsPage";
 
 const App = () => {
-  // const [user, setUser] = useState(null);
-  // const value = useMemo(() => ({ user, setUser }), [user, setUser]);
-
+  const [loggedIn, setLoggedIn] = useState(true);
   return (
     <div>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Login />}></Route>
+          <Route path="/" element={<Login setLoggedIn={setLoggedIn}/>}></Route>
           {/* <UserContext.Provider value={value}> */}
-          <Route path="/employees" element={<EmployeesPage />}></Route>
-          <Route path="/addPage" element={<AddPage />}></Route>
-          <Route path="/edit/:id" element={<Edit />}></Route>
+          <Route path="/employees" element={<EmployeesPage loggedIn={loggedIn}/>}></Route>
+          <Route path="/addPage" element={<AddPage loggedIn={loggedIn}/>}></Route>
+          <Route path="/edit/:id" element={<Edit loggedIn={loggedIn}/>}></Route>
+          <Route path="/vacPage" element={<VacationsPage loggedIn={loggedIn}/>}></Route>
           {/* </UserContext.Provider> */}
         </Routes>
       </BrowserRouter>

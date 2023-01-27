@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-// import { useNavigate, Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-const Login = () => {
-  // const navigate = useNavigate();
+const Login = (props) => {
+  const navigate = useNavigate();
   const [admins, setAdmins] = useState([]);
 
   useEffect(() => {
@@ -23,17 +23,23 @@ const Login = () => {
     password: "",
   });
 
-  const checkCredentials = (e) => {
-    e.preventDefault();
-    const inputUsername = inputValues.username;
-    const inputPassword = inputValues.password;
-    admins.map((admin) => {
-      if (admin.username === inputUsername && admin.password === inputPassword) {
-        console.log("successfull if");
-        return true;
-      }
-      return false;
-    });
+
+  const checkCredentials = async (e) => {
+    try{
+      e.preventDefault();
+      const verifed = (await axios.post("http://localhost:4000/"+{username:inputValues.username , password: inputValues.password})).data;
+      props.setLoggedIn(verifed);
+    } catch (error) {
+      console.log(error);
+    }
+    // admins.map((admin) => {
+    //   if (admin.username === inputUsername && admin.password === inputPassword) {
+    //     props.setLoggedIn(true);
+    //     navigate("/employees");
+    //     return true;
+    //   }
+    //   return false;
+    // });
   };
 
   const handleChange = (e) => {
@@ -48,7 +54,7 @@ const Login = () => {
       <form onSubmit={checkCredentials}>
         <input placeholder="Username" name="username" onChange={handleChange} value={inputValues.username} />
         <input placeholder="Password" name="password" onChange={handleChange} value={inputValues.password} />
-        <button type="submit">Sign In</button>
+        <button type="submit" >Sign In</button>
       </form>
     </div>
   );
