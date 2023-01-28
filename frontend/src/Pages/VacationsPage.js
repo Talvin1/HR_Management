@@ -1,39 +1,44 @@
 import React, { useEffect, useState } from "react";
 import Modal from "../components/Modal";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import './EmployeesPage.css'
 
 const VacationsPage = (props) => {
   const [currentEmp, setCurrentEmp] = useState({});
-  const [employeeList, setEmployeeList] = useState([]);
   const [vacList, setVacList] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const IdFromUrl = useLocation().pathname.split("/");
+
   useEffect(() => {
-    const fetchAllEmployees = async () => {
+    const fetchEmployee = async () => {
       try {
-        const res = await axios.get("http://localhost:4000/employees");
-        setEmployeeList(res.data);
+        const res = await axios.get("http://localhost:4000/employees/" + IdFromUrl[2]);
+        setCurrentEmp(res.data);
       } catch (error) {
         console.log(error);
       }
     };
     const fetchAllVacs = async () => {
         try {
-          const res = await axios.get("http://localhost:4000/vacations");
+          const res = await axios.get("http://localhost:4000/vacPage/" + IdFromUrl[2]);
           setVacList(res.data);
         } catch (error) {
           console.log(error);
         }
       };
-    fetchAllEmployees();
+      fetchEmployee();
     fetchAllVacs();
   }, []);
 
   const openModal = (e) => {
-    setCurrentEmp(employeeList[e.target.id - 1]);
     setModalIsOpen(true);
   };
+
+
+
+  // <Link to={"/editVac/"+ props.emp.id}> Go to vacations data on employee</Link>
+
 
   const closeModal = () => {
     setModalIsOpen(false);
@@ -52,30 +57,14 @@ const VacationsPage = (props) => {
   return (
     props.loggedIn &&
     <div>
-      {employeeList.map((emp, index) => {
-        return (
-          <div key={index + 1}>
-            <button onClick={openModal} id={index + 1}>
-              <h1 id={index + 1}>{"Name: " + emp.fullname + ", ID: " + emp.id}</h1>
+          <div >
+            <button onClick={openModal}>
+              <h1>{"Name: " + currentEmp.fullname + ", ID: " + currentEmp.id}</h1>
             </button>
           </div>
-        );
-      })}
-      {modalIsOpen && <Modal closeModal={closeModal} emp={currentEmp}/>}
-      <button>
-        <Link to="/addPage"> Add new employee</Link>
-      </button>
+      {modalIsOpen && <Modal closeModal={closeModal} emp={currentEmp} type={"vac"}/>}
     </div>
   );
 };
 
 export default VacationsPage;
-
-{/* 
-// <p>Add dates of vacation:</p>
-//         <p>Start</p>
-//         <input type="date"/>
-//         <p>End</p>
-//         <input type="date"/>
-//         <p>Tick the box if the vacation is a *sick leave*</p>
-//         <input type="checkbox"/> */}

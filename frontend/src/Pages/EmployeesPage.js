@@ -52,7 +52,7 @@ const EmployeesPage = (props) => {
           </div>
         );
       })}
-      {modalIsOpen && <Modal closeModal={closeModal} emp={currentEmp} handleDelete={handleDelete} />}
+      {modalIsOpen && <Modal closeModal={closeModal} emp={currentEmp} handleDelete={handleDelete} type={"info"} />}
       <button>
         <Link to="/addPage"> Add new employee</Link>
       </button>

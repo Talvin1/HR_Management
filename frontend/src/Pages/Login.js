@@ -5,18 +5,7 @@ import { useNavigate } from "react-router-dom";
 const Login = (props) => {
   const navigate = useNavigate();
   const [admins, setAdmins] = useState([]);
-
-  useEffect(() => {
-    const fetchAllAdmins = async () => {
-      try {
-        const res = await axios.get("http://localhost:4000/");
-        setAdmins(res.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchAllAdmins();
-  }, []);
+  
 
   const [inputValues, setInputValues] = useState({
     username: "",
@@ -27,19 +16,16 @@ const Login = (props) => {
   const checkCredentials = async (e) => {
     try{
       e.preventDefault();
-      const verifed = (await axios.post("http://localhost:4000/"+{username:inputValues.username , password: inputValues.password})).data;
+      const verifed = (await axios.post("http://localhost:4000/login", {username:inputValues.username , password: inputValues.password})).data;
       props.setLoggedIn(verifed);
+      if(verifed === true) {
+        navigate("/employees")
+      }else {
+        alert("Wrong Credentials")
+      }
     } catch (error) {
       console.log(error);
     }
-    // admins.map((admin) => {
-    //   if (admin.username === inputUsername && admin.password === inputPassword) {
-    //     props.setLoggedIn(true);
-    //     navigate("/employees");
-    //     return true;
-    //   }
-    //   return false;
-    // });
   };
 
   const handleChange = (e) => {

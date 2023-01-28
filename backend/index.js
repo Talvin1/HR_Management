@@ -4,6 +4,7 @@ import cors from "cors";
 
 const app = express();
 
+//Established the connection to the db in MySQL
 const db = mysql.createConnection({
   // host: "127.0.0.1",
   host: "localhost",
@@ -13,9 +14,12 @@ const db = mysql.createConnection({
   database: "hr_manager"
 });
 
+// Cors is making your server accessible to any domain that requests something from the server via a browser, and express parses incoming JSON requests and puts the parsed data in the req field
 app.use(express.json());
 app.use(cors());
 
+
+// Returns all the employees from the table to show in EmployeesPage 
 app.get("/employees", (req, res) => {
   const query = "SELECT * FROM employees";
   db.query(query, (error, data) => {
@@ -26,9 +30,10 @@ app.get("/employees", (req, res) => {
   });
 });
 
-app.get("/vacations", (req, res) => {
-  const query = "SELECT * FROM dates";
-  db.query(query, (error, data) => {
+app.get("/employees/:id", (req, res) => {
+  const employeeId = req.params.id;
+  const query = "SELECT * FROM hr_manager.employees WHERE id = ?";
+  db.query(query, [employeeId], (error, data) => {
     if (error) {
       res.json(error);
     }
@@ -36,6 +41,39 @@ app.get("/vacations", (req, res) => {
   });
 });
 
+// Returns all the vacations/sick leaves from the table to show in VacationsPage 
+app.get("/vacPage/:id", (req, res) => {
+  const employeeId = req.params.id;
+  const query = "SELECT * FROM hr_manager.dates WHERE employeeId = ?";
+  db.query(query,[employeeId], (error, data) => {
+    if (error) {
+      res.json(error);
+    }
+    res.json(data);
+  });
+});
+
+
+// Takes all the employee's vacations/sick leave info from the request and inserts it into the dates table
+app.post("/editVac/:id", (req, res) => {
+  const query =
+    "INSERT INTO dates (employeeId, startDate, endDate, isSick) VALUES (?)";
+  const values = [
+    req.params.id,
+    req.body.startDate,
+    req.body.endDate,
+    req.body.isSick
+  ];
+  db.query(query, [values], (error, data) => {
+    if (error) {
+      return res.json(error);
+    }
+    return res.json("Vacation/sick leave has been added");
+  });
+});
+
+
+// Takes all the employee's info from the request and inserts it into the employees table
 app.post("/employees", (req, res) => {
   const query =
     "INSERT INTO employees (id,fullname,birthdate,employmentDate,remainingVacDays,address,phoneNumber,empPic) VALUES (?)";
@@ -57,10 +95,14 @@ app.post("/employees", (req, res) => {
   });
 });
 
+
+// Logs to the console when the connection is up and running 
 app.listen(4000, () => {
   console.log("Connected to backend!");
 });
 
+
+// takes the id of the employee from the url of the page and deletes the employee from the table
 app.delete("/employees/:id", (req, res) => {
   const employeeId = req.params.id;
   const query = "DELETE FROM employees WHERE id = ?";
@@ -72,6 +114,21 @@ app.delete("/employees/:id", (req, res) => {
   });
 });
 
+
+// takes the id of the employee from the url of the page and deletes the employee from the table
+app.delete("/editVac/:id", (req, res) => {
+  const vacId = req.params.id;
+  const query = "DELETE FROM hr_manager.dates WHERE vacId = ?";
+  db.query(query, [vacId], (error, data) => {
+    if (error) {
+      return res.json(error);
+    }
+    return res.json("Vacation deleted!");
+  });
+});
+
+
+// Takes all the employee's info from the request and updates the mployee in the table based on the id of the employee it got from the request
 app.put("/employees/:id", (req, res) => {
   const employeeId = req.params.id;
   const query =
@@ -93,24 +150,20 @@ app.put("/employees/:id", (req, res) => {
   });
 });
 
-app.get("/", (req, res) => {
+
+//Checks all the username:password objects (users) from the table in the db and return a boolean if the given input from the user is in the admins table
+app.post("/login", (req, res) => {
+  let foundUser = false;
   const query = "SELECT * FROM admins";
   db.query(query, (error, data) => {
     if (error) {
       res.json(error);
     }
-    // Here extract the username and password from the request 
-    // then its a simple IsIn function and return the result which will go inside logged in 
-    // Good luck
-
     data.forEach(admin => {
-      if(admin.username === req.username && admin.password === req.password){
-        console.log("success!!!")
-        return true;
+      if (req.body.username === admin.username && admin.password === req.body.password) {
+        foundUser = true;
       }
     });
-    console.log("nooo!!!")
-    return false;
-    // res.json(data);
+    return res.json(foundUser);
   });
 });
