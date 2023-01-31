@@ -1,27 +1,31 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+// import companyLogo from "/frontend/public/images";
 
-const Login = (props) => {
+const Login = () => {
   const navigate = useNavigate();
-  const [admins, setAdmins] = useState([]);
-  
-
+  let verifed = false;
   const [inputValues, setInputValues] = useState({
     username: "",
     password: "",
   });
 
-
   const checkCredentials = async (e) => {
-    try{
+    try {
       e.preventDefault();
-      const verifed = (await axios.post("http://localhost:4000/login", {username:inputValues.username , password: inputValues.password})).data;
-      props.setLoggedIn(verifed);
-      if(verifed === true) {
-        navigate("/employees")
-      }else {
-        alert("Wrong Credentials")
+      verifed = (
+        await axios.post("http://localhost:4000/login", {
+          username: inputValues.username.replace(/\s/g, ""),
+          password: inputValues.password.replace(/\s/g, ""),
+        })
+      ).data;
+      if (verifed) {
+        window.localStorage.setItem("authenticated", "true");
+        navigate("/employees");
+      } else {
+        window.localStorage.setItem("authenticated", "false");
+        alert("Wrong Credentials");
       }
     } catch (error) {
       console.log(error);
@@ -34,13 +38,30 @@ const Login = (props) => {
     });
   };
   return (
-    <div>
-      <h1>'Alpha Robotics' Human Resources System</h1>
+    <div className="loginContainer">
+      <div className="title">
+        <h1>'Alpha Robotics' Human Resources System</h1>
+      </div>
       <h2>Please Enter Your Credentials To Access The System</h2>
       <form onSubmit={checkCredentials}>
-        <input placeholder="Username" name="username" onChange={handleChange} value={inputValues.username} />
-        <input placeholder="Password" name="password" onChange={handleChange} value={inputValues.password} />
-        <button type="submit" >Sign In</button>
+        <input
+          className="input"
+          placeholder="Username"
+          name="username"
+          onChange={handleChange}
+          value={inputValues.username}
+        />
+        <input
+          className="input"
+          placeholder="Password"
+          name="password"
+          onChange={handleChange}
+          value={inputValues.password}
+        />
+        <br />
+        <button className="button" type="submit">
+          Sign In
+        </button>
       </form>
     </div>
   );

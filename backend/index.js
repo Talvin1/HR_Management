@@ -6,20 +6,17 @@ const app = express();
 
 //Established the connection to the db in MySQL
 const db = mysql.createConnection({
-  // host: "127.0.0.1",
-  host: "localhost",
+  host: "127.0.0.1",
   user: "root",
   password: "TalVin13572022",
-  // database: "hr_manager_data",
-  database: "hr_manager"
+  database: "hr_manager_data",
 });
 
 // Cors is making your server accessible to any domain that requests something from the server via a browser, and express parses incoming JSON requests and puts the parsed data in the req field
 app.use(express.json());
 app.use(cors());
 
-
-// Returns all the employees from the table to show in EmployeesPage 
+// Returns all the employees from the table to show in EmployeesPage
 app.get("/employees", (req, res) => {
   const query = "SELECT * FROM employees";
   db.query(query, (error, data) => {
@@ -32,7 +29,7 @@ app.get("/employees", (req, res) => {
 
 app.get("/employees/:id", (req, res) => {
   const employeeId = req.params.id;
-  const query = "SELECT * FROM hr_manager.employees WHERE id = ?";
+  const query = "SELECT * FROM employees WHERE id = ?";
   db.query(query, [employeeId], (error, data) => {
     if (error) {
       res.json(error);
@@ -41,11 +38,11 @@ app.get("/employees/:id", (req, res) => {
   });
 });
 
-// Returns all the vacations/sick leaves from the table to show in VacationsPage 
-app.get("/vacPage/:id", (req, res) => {
+// Returns all the vacations/sick leaves from the table to show in VacationsPage
+app.get("/editVac/:id", (req, res) => {
   const employeeId = req.params.id;
-  const query = "SELECT * FROM hr_manager.dates WHERE employeeId = ?";
-  db.query(query,[employeeId], (error, data) => {
+  const query = "SELECT * FROM dates WHERE empId = ?";
+  db.query(query, [employeeId], (error, data) => {
     if (error) {
       res.json(error);
     }
@@ -53,17 +50,10 @@ app.get("/vacPage/:id", (req, res) => {
   });
 });
 
-
 // Takes all the employee's vacations/sick leave info from the request and inserts it into the dates table
 app.post("/editVac/:id", (req, res) => {
-  const query =
-    "INSERT INTO dates (employeeId, startDate, endDate, isSick) VALUES (?)";
-  const values = [
-    req.params.id,
-    req.body.startDate,
-    req.body.endDate,
-    req.body.isSick
-  ];
+  const query = "INSERT INTO dates (empId, startDate, endDate, isSick) VALUES (?)";
+  const values = [req.params.id, req.body.startDate, req.body.endDate, req.body.isSick];
   db.query(query, [values], (error, data) => {
     if (error) {
       return res.json(error);
@@ -71,7 +61,6 @@ app.post("/editVac/:id", (req, res) => {
     return res.json("Vacation/sick leave has been added");
   });
 });
-
 
 // Takes all the employee's info from the request and inserts it into the employees table
 app.post("/employees", (req, res) => {
@@ -95,12 +84,10 @@ app.post("/employees", (req, res) => {
   });
 });
 
-
-// Logs to the console when the connection is up and running 
+// Logs to the console when the connection is up and running
 app.listen(4000, () => {
   console.log("Connected to backend!");
 });
-
 
 // takes the id of the employee from the url of the page and deletes the employee from the table
 app.delete("/employees/:id", (req, res) => {
@@ -114,11 +101,10 @@ app.delete("/employees/:id", (req, res) => {
   });
 });
 
-
 // takes the id of the employee from the url of the page and deletes the employee from the table
 app.delete("/editVac/:id", (req, res) => {
   const vacId = req.params.id;
-  const query = "DELETE FROM hr_manager.dates WHERE vacId = ?";
+  const query = "DELETE FROM dates WHERE vacId = ?";
   db.query(query, [vacId], (error, data) => {
     if (error) {
       return res.json(error);
@@ -126,7 +112,6 @@ app.delete("/editVac/:id", (req, res) => {
     return res.json("Vacation deleted!");
   });
 });
-
 
 // Takes all the employee's info from the request and updates the mployee in the table based on the id of the employee it got from the request
 app.put("/employees/:id", (req, res) => {
@@ -150,7 +135,6 @@ app.put("/employees/:id", (req, res) => {
   });
 });
 
-
 //Checks all the username:password objects (users) from the table in the db and return a boolean if the given input from the user is in the admins table
 app.post("/login", (req, res) => {
   let foundUser = false;
@@ -159,7 +143,7 @@ app.post("/login", (req, res) => {
     if (error) {
       res.json(error);
     }
-    data.forEach(admin => {
+    data.forEach((admin) => {
       if (req.body.username === admin.username && admin.password === req.body.password) {
         foundUser = true;
       }
