@@ -1,66 +1,57 @@
-.modalBackground {
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(200, 200, 200);
+.modalContainer {
+  background-color: #961010;
+  border-radius: 8px;
+  box-sizing: border-box;
   position: fixed;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -55%);
+  border: solid 0px;
+  width: 45%;
+  height: 80%;
 }
 
-.modalContainer {
-  width: 500px;
-  height: 500px;
-  border-radius: 12px;
-  background-color: white;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+.modalContent {
+  background-color: rgb(255, 255, 255);
+  padding: 0.2rem;
+  margin: 1rem 3rem;
+  border: solid 2px;
+  border-radius: 7px;
+}
+
+.close {
+  color: rgb(0, 0, 0);
+  float: right;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.footer {
   display: flex;
   flex-direction: column;
-  padding: 25px;
-}
-
-.modalContainer .title {
-  display: inline-block;
-  text-align: center;
-  margin-top: 10px;
-}
-
-.titleCloseBtn {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.titleCloseBtn button {
-  background-color: transparent;
-  border: none;
-  font-size: 25px;
-  cursor: pointer;
-}
-
-.modalContainer .body {
-  flex: 50%;
-  display: flex;
-  justify-content: center;
   align-items: center;
-  font-size: 1.7rem;
-  text-align: center;
+  gap: 0.5rem;
 }
 
-.modalContainer .footer {
-  flex: 20%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.footer > button {
+  width: fit-content;
+  height: fit-content;
 }
 
-.modalContainer .footer button {
-  width: 150px;
-  height: 45px;
-  margin: 10px;
-  border: none;
-  background-color: cornflowerblue;
+button > a {
+  color: black;
+  font-weight: bold;
+}
+
+.delButton {
+  background-color: #ff0000;
   color: white;
-  border-radius: 8px;
-  font-size: 20px;
-  cursor: pointer;
+  border-radius: 7px;
 }

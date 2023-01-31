@@ -1,0 +1,27 @@
+#root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.addContainer > form {
+  display: flex;
+  color: white;
+  text-shadow: 0 0 2px rgb(0, 0, 0);
+  flex-direction: column;
+  gap: 0.1rem;
+  background-color: #961010;
+  padding: 2rem 6rem;
+  border-radius: 7px;
+  border: solid 1.5px;
+}
+
+.fileInput {
+  color: white;
+  text-shadow: 0 0 2px rgb(0, 0, 0);
+}
+
+img {
+  width: 15rem;
+}

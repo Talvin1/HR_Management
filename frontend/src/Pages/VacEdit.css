@@ -1,0 +1,23 @@
+h2 {
+  text-align: center;
+  text-decoration: underline;
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  text-decoration: underline;
+}
+
+.vacEditContainer {
+  margin: 1rem;
+}
+
+.checkbox {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+img {
+  width: 15rem;
+}

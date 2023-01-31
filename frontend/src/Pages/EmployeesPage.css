@@ -1,0 +1,66 @@
+.employees {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  max-width: 100%;
+  background-color: #961010;
+  border: solid 1px;
+  border-radius: 7px;
+  flex-wrap: wrap;
+}
+
+#root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.emp > button {
+  margin: 1.5rem;
+  max-width: 13rem;
+  width: 13rem;
+  height: 6rem;
+  padding: 0;
+}
+
+.emp > button > p {
+  font-weight: bold;
+  font-size: medium;
+}
+
+.emp > button {
+  border: 0;
+  border-radius: 7px;
+  border: solid 1.5px;
+}
+
+.pageContainer {
+  padding: 0;
+  margin: 0;
+  width: 90%;
+}
+
+.logoContainer {
+  display: flex;
+  margin: 0.3rem;
+  width: 100%;
+}
+
+.logoContainer > img {
+  width: 15rem;
+}
+
+.emp > button {
+  display: flex;
+  flex-direction: column;
+}
+
+.addBtn {
+  margin: 6rem;
+}
+
+.addBtn > a {
+  color: rgb(0, 0, 0);
+  text-transform: de;
+  font-weight: bold;
+}
