@@ -18,7 +18,8 @@ app.use(cors());
 
 // Returns all the employees from the table to show in EmployeesPage
 app.get("/employees", (req, res) => {
-  const query = "SELECT * FROM employees";
+  const query =
+    "SELECT id, fullname, birthdate, employmentDate, remainingVacDays, address, phoneNumber, empPic FROM employees";
   db.query(query, (error, data) => {
     if (error) {
       res.json(error);
@@ -29,7 +30,8 @@ app.get("/employees", (req, res) => {
 
 app.get("/employees/:id", (req, res) => {
   const employeeId = req.params.id;
-  const query = "SELECT * FROM employees WHERE id = ?";
+  const query =
+    "SELECT id, fullname, birthdate, employmentDate, remainingVacDays, address, phoneNumber, empPic FROM employees WHERE id = ?";
   db.query(query, [employeeId], (error, data) => {
     if (error) {
       res.json(error);
@@ -41,7 +43,7 @@ app.get("/employees/:id", (req, res) => {
 // Returns all the vacations/sick leaves from the table to show in VacationsPage
 app.get("/editVac/:id", (req, res) => {
   const employeeId = req.params.id;
-  const query = "SELECT * FROM dates WHERE empId = ?";
+  const query = "SELECT vacId, empId, startDate, endDate, isSick FROM dates WHERE empId = ?";
   db.query(query, [employeeId], (error, data) => {
     if (error) {
       res.json(error);
@@ -138,7 +140,7 @@ app.put("/employees/:id", (req, res) => {
 //Checks all the username:password objects (users) from the table in the db and return a boolean if the given input from the user is in the admins table
 app.post("/login", (req, res) => {
   let foundUser = false;
-  const query = "SELECT * FROM admins";
+  const query = "SELECT id, username, password FROM admins";
   db.query(query, (error, data) => {
     if (error) {
       res.json(error);
