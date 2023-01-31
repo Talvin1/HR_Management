@@ -33,7 +33,7 @@ const Modal = (props) => {
           <h1>{props.emp.fullname}</h1>
         </div>
         <div className="body">
-          <p> hey{props.emp.empPic} </p>
+          <p> {props.emp.empPic} </p>
           <p>{"Employee'd identification number: " + props.emp.id}</p>
           <p>{"Was born on the " + birthdateFormatted}</p>
           <p>
