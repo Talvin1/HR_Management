@@ -19,8 +19,10 @@
   margin: 1.5rem;
   max-width: 13rem;
   width: 13rem;
-  height: 6rem;
+  max-height: 9rem;
+  height: 8rem;
   padding: 0;
+  align-items: center;
 }
 
 .emp > button > p {
