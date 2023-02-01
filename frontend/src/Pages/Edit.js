@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router";
 import "./Edit.css";
 import { Link } from "react-router-dom";
@@ -11,6 +11,18 @@ const Edit = () => {
   currentDate.getDate();
   const date = new Date();
   const IdFromUrl = useLocation().pathname.split("/");
+
+  useEffect(() => {
+    const fetchEmployee = async () => {
+      try {
+        const res = await axios.get("http://localhost:4000/employees/" + IdFromUrl[2]);
+        setEmployee(res.data[0]);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchEmployee();
+  }, []);
 
   const onlyLettersAndSpaces = (str) => {
     return /^[A-Za-z\s]*$/.test(str);
@@ -28,9 +40,9 @@ const Edit = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const date21YearsAgo = new Date(date.setFullYear(date.getFullYear() - 21));
-    const empDateFormat = new Date(employee.birthdate);
-    let approved = true;
+    // const date21YearsAgo = new Date(date.setFullYear(date.getFullYear() - 21));
+    // const empDateFormat = new Date(employee.birthdate);
+    // let approved = true;
     // if (empDateFormat > date21YearsAgo) {
     //   alert("Employee doesn't meet the age requirement");
     //   approved = false;
@@ -78,7 +90,14 @@ const Edit = () => {
         <h1>Choose a field to edit</h1>
         <form>
           <p>Enter employee's full name</p>
-          <input type="text" maxLength="30" name="fullname" placeholder="Fullname" onChange={handleChange} />
+          <input
+            type="text"
+            maxLength="30"
+            name="fullname"
+            placeholder="Fullname"
+            onChange={handleChange}
+            value={employee.fullname}
+          />
           <p>Enter employee's birthdate</p>
           <input
             type="date"
@@ -87,6 +106,7 @@ const Edit = () => {
             onChange={handleChange}
             min="01-01-1960"
             max={currentDate}
+            value={employee.birthdate}
           />
           <p>Enter employee's employment date</p>
           <input
@@ -96,9 +116,10 @@ const Edit = () => {
             onChange={handleChange}
             min="01-01-2015"
             max={currentDate}
+            value={employee.employmentDate}
           />
           <p>Enter employee's address</p>
-          <input type="text" name="address" placeholder="Address" onChange={handleChange} />
+          <input type="text" name="address" placeholder="Address" onChange={handleChange} value={employee.address} />
           <p>Enter employee's phone number</p>
           <input
             type="text"
@@ -108,16 +129,17 @@ const Edit = () => {
             onChange={handleChange}
             min="0500000000"
             max="0599999999"
+            value={employee.phoneNumber}
           />
-          <p>Enter employee's picture</p>
-          <input
+          {/* <p>Enter employee's picture</p> */}
+          {/* <input
             type="file"
             name="empPic"
             className="fileInput"
             placeholder="Picture"
             onChange={handleChange}
             accept="image/*"
-          />
+          /> */}
           <br />
           <button onClick={handleSubmit}>Save Changes To Employee</button>
         </form>

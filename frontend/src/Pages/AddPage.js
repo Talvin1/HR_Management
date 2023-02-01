@@ -132,8 +132,8 @@ const AddPage = () => {
             min="0500000000"
             max="0599999999"
           />
-          <p>Enter employee's picture</p>
-          <input type="file" name="empPic" placeholder="Picture" onChange={handleChange} accept="image/*" />
+          {/* <p>Enter employee's picture</p>
+          <input type="file" name="empPic" placeholder="Picture" onChange={handleChange} accept="image/*" /> */}
           <button onClick={handleSubmit}>Add Employee</button>
         </form>
       </div>
