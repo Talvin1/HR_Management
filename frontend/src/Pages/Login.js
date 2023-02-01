@@ -40,6 +40,7 @@ const Login = () => {
   return (
     <div className="loginContainer">
       <div className="title">
+        <img src="/images/alpha-robotics-logo.png" alt="logo" />
         <h1>'Alpha Robotics' Human Resources System</h1>
       </div>
       <h2>Please Enter Your Credentials To Access The System</h2>
