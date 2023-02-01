@@ -4,6 +4,17 @@ import cors from "cors";
 
 const app = express();
 
+const loginQuery = "SELECT username, password FROM admins";
+const getAllEmpQuery =
+  "SELECT id, fullname, birthdate, employmentDate, remainingVacDays, address, phoneNumber, empPic FROM employees";
+const getSpecificEmpQuery =
+  "SELECT id, fullname, birthdate, employmentDate, remainingVacDays, address, phoneNumber, empPic FROM employees WHERE id = ?";
+const getAllEmpVacsQuery = "SELECT vacId, empId, startDate, endDate, isSick FROM dates WHERE empId = ?";
+const insertNewVacQuery = "INSERT INTO dates (empId, startDate, endDate, isSick) VALUES (?)";
+const insertNewEmpQuery =
+  "INSERT INTO employees (id,fullname,birthdate,employmentDate,remainingVacDays,address,phoneNumber,empPic) VALUES (?)";
+const deleteEmpQuery = "DELETE FROM employees WHERE id = ?";
+
 //Established the connection to the db in MySQL
 const db = mysql.createConnection({
   host: "127.0.0.1",
@@ -18,9 +29,7 @@ app.use(cors());
 
 // Returns all the employees from the table to show in EmployeesPage
 app.get("/employees", (req, res) => {
-  const query =
-    "SELECT id, fullname, birthdate, employmentDate, remainingVacDays, address, phoneNumber, empPic FROM employees";
-  db.query(query, (error, data) => {
+  db.query(getAllEmpQuery, (error, data) => {
     if (error) {
       res.json(error);
     }
@@ -30,9 +39,7 @@ app.get("/employees", (req, res) => {
 
 app.get("/employees/:id", (req, res) => {
   const employeeId = req.params.id;
-  const query =
-    "SELECT id, fullname, birthdate, employmentDate, remainingVacDays, address, phoneNumber, empPic FROM employees WHERE id = ?";
-  db.query(query, [employeeId], (error, data) => {
+  db.query(getSpecificEmpQuery, [employeeId], (error, data) => {
     if (error) {
       res.json(error);
     }
@@ -43,8 +50,7 @@ app.get("/employees/:id", (req, res) => {
 // Returns all the vacations/sick leaves from the table to show in VacationsPage
 app.get("/editVac/:id", (req, res) => {
   const employeeId = req.params.id;
-  const query = "SELECT vacId, empId, startDate, endDate, isSick FROM dates WHERE empId = ?";
-  db.query(query, [employeeId], (error, data) => {
+  db.query(getAllEmpVacsQuery, [employeeId], (error, data) => {
     if (error) {
       res.json(error);
     }
@@ -54,9 +60,8 @@ app.get("/editVac/:id", (req, res) => {
 
 // Takes all the employee's vacations/sick leave info from the request and inserts it into the dates table
 app.post("/editVac/:id", (req, res) => {
-  const query = "INSERT INTO dates (empId, startDate, endDate, isSick) VALUES (?)";
   const values = [req.params.id, req.body.startDate, req.body.endDate, req.body.isSick];
-  db.query(query, [values], (error, data) => {
+  db.query(insertNewVacQuery, [values], (error, data) => {
     if (error) {
       return res.json(error);
     }
@@ -66,8 +71,6 @@ app.post("/editVac/:id", (req, res) => {
 
 // Takes all the employee's info from the request and inserts it into the employees table
 app.post("/employees", (req, res) => {
-  const query =
-    "INSERT INTO employees (id,fullname,birthdate,employmentDate,remainingVacDays,address,phoneNumber,empPic) VALUES (?)";
   const values = [
     req.body.id,
     req.body.fullname,
@@ -78,7 +81,7 @@ app.post("/employees", (req, res) => {
     req.body.phoneNumber,
     req.body.empPic,
   ];
-  db.query(query, [values], (error, data) => {
+  db.query(insertNewEmpQuery, [values], (error, data) => {
     if (error) {
       return res.json(error);
     }
@@ -94,8 +97,7 @@ app.listen(4000, () => {
 // takes the id of the employee from the url of the page and deletes the employee from the table
 app.delete("/employees/:id", (req, res) => {
   const employeeId = req.params.id;
-  const query = "DELETE FROM employees WHERE id = ?";
-  db.query(query, [employeeId], (error, data) => {
+  db.query(deleteEmpQuery, [employeeId], (error, data) => {
     if (error) {
       return res.json(error);
     }
@@ -104,18 +106,17 @@ app.delete("/employees/:id", (req, res) => {
 });
 
 // takes the id of the employee from the url of the page and deletes the employee from the table
-app.delete("/editVac/:id", (req, res) => {
-  const vacId = req.params.id;
-  const query = "DELETE FROM dates WHERE vacId = ?";
-  db.query(query, [vacId], (error, data) => {
-    if (error) {
-      return res.json(error);
-    }
-    return res.json("Vacation deleted!");
-  });
-});
+// app.delete("/editVac/:id", (req, res) => {
+//   const vacId = req.params.id;
+//   db.query(deleteVacQuery, [vacId], (error, data) => {
+//     if (error) {
+//       return res.json(error);
+//     }
+//     return res.json("Vacation deleted!");
+//   });
+// });
 
-// Takes all the employee's info from the request and updates the mployee in the table based on the id of the employee it got from the request
+// Takes all the employee's info from the request and updates the employee in the table based on the id of the employee it got from the request
 app.put("/employees/:id", (req, res) => {
   const employeeId = req.params.id;
   const query =
@@ -139,17 +140,12 @@ app.put("/employees/:id", (req, res) => {
 
 //Checks all the username:password objects (users) from the table in the db and return a boolean if the given input from the user is in the admins table
 app.post("/login", (req, res) => {
-  let foundUser = false;
-  const query = "SELECT id, username, password FROM admins";
-  db.query(query, (error, data) => {
+  db.query(loginQuery, (error, data) => {
     if (error) {
-      res.json(error);
+      return res.json(error);
     }
-    data.forEach((admin) => {
-      if (req.body.username === admin.username && admin.password === req.body.password) {
-        foundUser = true;
-      }
+    data.map((admin) => {
+      return res.json(req.body.username === admin.username && admin.password === req.body.password);
     });
-    return res.json(foundUser);
   });
 });

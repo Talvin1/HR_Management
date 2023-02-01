@@ -61,7 +61,7 @@ const Edit = (props) => {
     const daysOfVacation = (endDateLong - startDateLong) / (1000 * 3600 * 24);
     let emp;
     if (action === "-") {
-      emp = { ...currentEmp, remainingVacDays: currentEmp.remainingVacDays - daysOfVacation };
+      emp = { ...currentEmp, remainingVacDays: currentEmp.remainingVacDays - (daysOfVacation + 1) };
     }
     // else{
     //   emp = {...currentEmp, remainingVacDays: currentEmp.remainingVacDays + daysOfVacation};
